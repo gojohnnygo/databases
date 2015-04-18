@@ -1,9 +1,9 @@
 var express = require('express');
-var db = require('./db');
+var db = require('./db'); // Will use later???
 
 // Middleware
-var morgan = require('morgan');
-var parser = require('body-parser');
+var morgan = require('morgan'); // logger
+var parser = require('body-parser'); // needed to read body of post requests
 
 // Router
 var router = require('./routes.js');
