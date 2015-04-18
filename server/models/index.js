@@ -8,9 +8,14 @@ var db = require('../db').dbConnection;
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
+    get: function (req, cb) {
+      db.query('SELECT * FROM messages', function(err, result) {
+        err && console.log(err);
+        cb(result);
+      });
+    }, // a function which produces all the messages
     post: function (message, cb) {
-      console.log('post message model');
+      // console.log('post message model');
       // get user id
       module.exports.users.get(message, function(userId) {
         var entry = {
@@ -27,11 +32,11 @@ module.exports = {
 
         db.query('INSERT INTO messages SET ?', entry, function(err, result) {
           if (err) {
-            console.log(err);
+            // console.log(err);
           } else {
-            console.log('post message')
+            console.log('post message');
             console.log(result);
-            // cb(result[0].id);
+            cb(result.insertId);
           }
         });
       });
@@ -45,9 +50,9 @@ module.exports = {
       var username = message.username;
       db.query('SELECT * FROM users WHERE username=?', username, function(err, result) {
         if (err) {
-          console.log(err);
+          // console.log(err);
         } else {
-          console.log('get user id', result[0].id);
+          // console.log('get user id', result[0].id);
           cb(result[0].id);
         }
       });
@@ -60,13 +65,13 @@ module.exports = {
         if (err) {
           // cb(err);
           db.query('SELECT * FROM users where username=?', username, function(err, result) {
-            cb(null, null, result);
-            console.log('post (no duplicate)', result[0].id); // primary key value
+            cb(result);
+            // console.log('post (no duplicate)', result[0].id); // primary key value
           });
-          console.log(err);
+          // console.log(err);
         } else {
-          cb(null, null, result);
-          console.log('post unique', result.insertId); // primary key value
+          cb(result);
+          // console.log('post unique', result.insertId); // primary key value
         }
       });
     }
